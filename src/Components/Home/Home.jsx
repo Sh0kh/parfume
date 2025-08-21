@@ -9,21 +9,21 @@ export default function Home() {
     const products = [
         {
             id: 1,
-            name: "Minimalistik quloqchinlar",
+            name: "Pudra",
             price: "12,990 so'm",
             image: Foto1,
             isNew: true
         },
         {
             id: 2,
-            name: "Smart soat Pro",
+            name: "Kiprik",
             price: "24,990 so'm",
             image: Foto2,
             isHot: true
         },
         {
             id: 3,
-            name: "Simsiz zaryadka",
+            name: "Dazmol gafri",
             price: "3,990 so'm",
             image: Foto3,
             isNew: false
