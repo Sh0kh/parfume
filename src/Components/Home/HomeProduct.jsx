@@ -1,34 +1,23 @@
-import React from 'react';
 import { Phone, ShoppingCart } from 'lucide-react';
 import Logo from '../../img/Logo.png'
-import Foto1 from '../../img/photo_2025-08-21_17-52-53.jpg'
-import Foto2 from '../../img/photo_2025-08-21_17-52-54.jpg'
-import Foto3 from '../../img/photo_2025-08-21_17-52-55.jpg'
 import { NavLink } from 'react-router-dom';
 
-export default function Home() {
+export default function HomeProduct() {
     const products = [
         {
             id: 1,
-            name: "Lab bo'yog'i",
-            price: "12,990 so'm",
-            image: 'https://ir.ozone.ru/s3/multimedia-q/c1000/6838195886.jpg',
+            name: "MAC Matte Lipstick Red Rock 0.1",
+            price: "25 000 so'm",
+            image: 'https://m.media-amazon.com/images/I/516A-vyh2lL._UF1000,1000_QL80_.jpg',
             isNew: true
         },
         {
             id: 2,
-            name: "Atirlar",
-            price: "24,990 so'm",
-            image: 'https://100k.website.yandexcloud.net/resized/1000x1000/products/images/X3JcYoRoJmfybSQ1LSoaPTz5KU5xXEvAXnvyYXwi.jpg.webp',
+            name: "RENEE Stunner Matte Lipstick, 4Gm",
+            price: "10 000 so'm",
+            image: 'https://www.reneecosmetics.in/cdn/shop/files/8906121645491_1_c8d144f0-e818-4c32-80bf-75f13f1ba956.jpg?v=1742483477&width=1946',
             isHot: true
         },
-        {
-            id: 3,
-            name: "Qosh va Kiprik",
-            price: "3,990 so'm",
-            image: 'https://pimg.eur.marykaycdn.com/HeroZoom/10005/10222586-MaryKay-Ultimate-Mascara.jpg',
-            isNew: false
-        }
     ];
 
     return (
@@ -40,7 +29,7 @@ export default function Home() {
                         {/* Logo */}
                         <div className="flex-shrink-0">
                             <div className="flex items-center space-x-2">
-                                <img className='w-[140px]' src={Logo} alt="" />
+                                <img className='w-[140px] ' src={Logo} alt="" />
                             </div>
                         </div>
                         {/* Actions */}
@@ -69,7 +58,7 @@ export default function Home() {
                                         <img
                                             src={product.image}
                                             alt={product.name}
-                                            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                                            className="w-full h-64 object- group-hover:scale-110 transition-transform duration-700"
                                         />
                                     </div>
 
@@ -79,11 +68,16 @@ export default function Home() {
                                         <h3 className="text-xl font-bold group-hover:text-purple-400 transition-colors" style={{ color: '#fef3e0' }}>
                                             {product.name}
                                         </h3>
+                                        <h3 className="text-xl font-bold group-hover:text-purple-400 transition-colors" style={{ color: '#fef3e0' }}>
+                                            {product.price}
+                                        </h3>
                                         {/* Add to Cart Button */}
-                                        {/* <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-2xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                                        <ShoppingCart className="w-5 h-5" />
-                                        <span>Savatga qo‘shish</span>
-                                    </button> */}
+                                        <NavLink to={`/buyProduct`}>
+                                            <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-2xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                                                <ShoppingCart className="w-5 h-5" />
+                                                <span>Sotib olish</span>
+                                            </button>
+                                        </NavLink>
                                     </div>
                                 </div>
                             </NavLink>

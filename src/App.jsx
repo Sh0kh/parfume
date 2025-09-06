@@ -3,7 +3,8 @@ import AppLayout from "./layouts/AppLayout";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
-import { userRoutes } from "./Routes/Routes"; // импорт твоих массивов маршрутов
+import { userRoutes, AdminRoutes } from "./Routes/Routes"; // импорт твоих массивов маршрутов
+import AdminLayout from "./layouts/AdminLayout";
 
 function App() {
   return (
@@ -12,6 +13,15 @@ function App() {
         <Route path="/" element={<AppLayout />}>
           <Route element={<MainLayout />}>
             {userRoutes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.component}
+              />
+            ))}
+          </Route>
+          <Route element={<AdminLayout />}>
+            {AdminRoutes.map((route) => (
               <Route
                 key={route.path}
                 path={route.path}
