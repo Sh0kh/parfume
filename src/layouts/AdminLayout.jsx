@@ -8,17 +8,7 @@ import AdminHeader from "../Components/UI/Header/AdminHeader";
 export default function AdminLayout() {
 
     const [active, setActive] = useState(false)
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const navigate = useNavigate()
 
-    useEffect(() => {
-        if (isAuthenticated !== 'true') {
-            navigate('/login');
-            localStorage.clear()
-        } else {
-            console.log("Error")
-        }
-    }, [isAuthenticated])
 
     return (
         <div className="flex w-[100%] overflow-hidden  bg-[#FAFAFA] relative">
