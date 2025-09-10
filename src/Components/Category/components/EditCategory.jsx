@@ -8,15 +8,15 @@ import {
     Input,
     Typography,
 } from "@material-tailwind/react";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import { $api } from "../../../utils";
 import { Alert } from "../../../utils/Alert";
 
-export default function CreateCategory({ refresh }) {
+export default function EditCategory({ data, refresh }) {
     const [open, setOpen] = useState(false);
-    const [name, setName] = useState("");
+    const [name, setName] = useState(data?.name || "");
     const [image, setImage] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState(data?.file?.url || null);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleOpen = () => setOpen(!open);
@@ -38,60 +38,62 @@ export default function CreateCategory({ refresh }) {
         setIsLoading(true);
 
         try {
-            let fileId = 0;
+            let fileId = data?.file?.id || 0;
 
-            // Если есть изображение, сначала загружаем его
+            // Agar yangi rasm tanlansa — upload qilamiz
             if (image) {
                 const formData = new FormData();
-                formData.append('files', image);
+                formData.append("files", image);
 
-                const uploadResponse = await $api.post('api/v1/file/uploads', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
+                const uploadResponse = await $api.post("api/v1/file/uploads", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                // Получаем ID загруженного файла из ответа
-                // Предполагается, что сервер возвращает объект с полем id
                 fileId = uploadResponse?.data?.object[0]?.id;
             }
-            // Создаем категорию с полученным fileId
-            const data = {
+
+            // Yangilash
+            const payload = {
                 name: name.trim(),
                 fileId: fileId,
-                isActive: true
+                isActive: true,
             };
 
-            const response = await $api.post('/admin/categories', data);
-            Alert("Kategoriya muvaffaqiyatli yaratildi", "success");
-            refresh()
-            handleOpen();
-            setName("");
-            setImage(null);
-            setPreview(null);
+            await $api.put(`/admin/categories/${data.id}`, payload);
 
+            Alert("Kategoriya muvaffaqiyatli yangilandi", "success");
+            refresh();
+            handleOpen();
         } catch (error) {
             console.error("Xatolik:", error);
-            Alert(`Xatolik: ${error.response?.data?.message || error.message || "Server xatosi"}`, "error");
+            Alert(
+                `Xatolik: ${error.response?.data?.message || error.message || "Server xatosi"
+                }`,
+                "error"
+            );
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="">
-            <Button color="blue" className="flex items-center gap-2" onClick={handleOpen}>
-                <PlusIcon className="h-5 w-5" />
-                Yangi Kategoriya
+        <>
+            <Button
+                color="blue"
+                size="sm"
+                className="flex items-center gap-1"
+                onClick={handleOpen}
+            >
+                <PencilIcon className="h-4 w-4" />
             </Button>
 
             <Dialog open={open} handler={handleOpen} size="sm">
-                <DialogHeader>Kategoriya yaratish</DialogHeader>
+                <DialogHeader>Kategoriyani tahrirlash</DialogHeader>
                 <DialogBody divider>
                     <form className="space-y-6">
                         <div>
                             <Input
-                                label=" Kategoriya nomi"
+                                label="Kategoriya nomi"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 disabled={isLoading}
@@ -99,14 +101,14 @@ export default function CreateCategory({ refresh }) {
                         </div>
 
                         <div>
-                            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="mb-2 font-medium"
+                            >
                                 Rasm yuklash
                             </Typography>
-                            <Input
-                                type="file"
-                                onChange={handleFileChange}
-                                disabled={isLoading}
-                            />
+                            <Input type="file" onChange={handleFileChange} disabled={isLoading} />
                         </div>
 
                         {preview && (
@@ -118,7 +120,6 @@ export default function CreateCategory({ refresh }) {
                                 />
                             </div>
                         )}
-
                     </form>
                 </DialogBody>
                 <DialogFooter className="space-x-2">
@@ -133,18 +134,18 @@ export default function CreateCategory({ refresh }) {
                     >
                         {isLoading ? (
                             <div className="flex justify-center gap-[10px]">
-                                Yaratilmoqda
+                                Saqlanmoqda
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                             </div>
                         ) : (
                             <>
-                                <PlusIcon className="h-5 w-5" />
-                                Yaratish
+                                <PencilIcon className="h-5 w-5" />
+                                Saqlash
                             </>
                         )}
                     </Button>
                 </DialogFooter>
             </Dialog>
-        </div>
+        </>
     );
 }

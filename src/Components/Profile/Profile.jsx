@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { $api } from "../../utils";
 
 export default function Profile() {
-    const [profile, setProfile] = useState({
-        name: "Shoxrux Tuxtanazarov",
-        phone: "+998 90 123 45 67",
-        password: "********",
-    });
+    const [profile, setProfile] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProfile({ ...profile, [name]: value });
     };
+
+    const getProfile = async () => {
+        try {
+            const response = await $api.get("/api/v1/admin/getMe");
+            setProfile(response.data?.object || {});
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        getProfile()
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +44,7 @@ export default function Profile() {
                         <input
                             type="text"
                             name="name"
-                            value={profile.name}
+                            value={profile.username}
                             onChange={handleChange}
                             className="w-full rounded-lg p-3 border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
                         />

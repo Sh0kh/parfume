@@ -5,36 +5,29 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, EyeIcon, FolderOpenIcon } from "@heroicons/react/24/solid";
 import CreateCategory from "./components/CreateCategory";
 import { NavLink } from "react-router-dom";
 import { $api } from "../../utils";
-import { Alert } from "../../utils/Alert";
+import Loading from "../UI/Loadings/Loading";
+import DeleteCategory from "./components/DeleteCategory";
+import EditCategory from "./components/EditCategory";
 
 export default function Category() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Kategoriyalarni olish funksiyasi
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const response = await $api.get(`/admin/categories`);
-
-      console.log("Kategoriya API javob:", response.data);
-
-      // array yoki objectni tekshirish
       const data =
         Array.isArray(response.data)
           ? response.data
           : response.data?.object ?? [];
-
       setCategories(data);
-
-      Alert("Kategoriyalar muvaffaqiyatli yuklandi ✅", "success");
     } catch (error) {
       console.error("Kategoriya olishda xato:", error);
-      Alert(`Xatolik kategoriyalarni olishda: ${error.message}`, "error");
     } finally {
       setLoading(false);
     }
@@ -44,18 +37,23 @@ export default function Category() {
     fetchCategories();
   }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    <div className="p-6 space-y-6">
-      {/* Yuqorida "Yangi kategoriya" tugmasi */}
+    <div className="px-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold mr-auto">Kategoriyalar</h1>
-        <CreateCategory />
+        <CreateCategory refresh={fetchCategories} />
       </div>
 
-      {loading ? (
-        <p className="text-center text-gray-500">Yuklanmoqda...</p>
-      ) : categories.length === 0 ? (
-        <p className="text-center text-red-500">Kategoriyalar topilmadi!</p>
+      {categories.length === 0 ? (
+        <div className="h-[350px] w-full flex flex-col items-center justify-center text-gray-500">
+          <svg className="w-12 h-12" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M10 3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1m10 0h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M10 13H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1m7 0a4 4 0 1 1-3.995 4.2L13 17l.005-.2A4 4 0 0 1 17 13"></path></svg>
+          <p className="text-lg font-medium">Kategoriyalar topilmadi</p>
+          <p className="text-sm text-gray-400">Yangi kategoriya qo‘shib ko‘ring</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((cat) => (
@@ -74,32 +72,14 @@ export default function Category() {
               {/* Body */}
               <CardBody className="flex flex-col flex-1 justify-between text-center">
                 {/* Title */}
-                <Typography
-                  variant="h6"
-                  color="blue-gray"
-                  className="mb-4"
-                >
+                <Typography variant="h6" color="blue-gray" className="mb-4">
                   {cat.name}
                 </Typography>
 
                 {/* Tugmalar */}
                 <div className="flex justify-center gap-2 mt-auto">
-                  <Button
-                    color="blue"
-                    size="sm"
-                    className="flex items-center gap-1"
-                    onClick={() => Alert("Edit bosildi ✏️", "info")}
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    color="red"
-                    size="sm"
-                    className="flex items-center gap-1"
-                    onClick={() => Alert("Delete bosildi ❌", "warning")}
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </Button>
+                  <EditCategory data={cat} refresh={fetchCategories} />
+                  <DeleteCategory categoryId={cat?.id} refresh={fetchCategories} />
                   <NavLink to={`/products/${cat.id}`}>
                     <Button
                       color="green"

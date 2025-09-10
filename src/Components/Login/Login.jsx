@@ -9,6 +9,7 @@ import {
 import { $api } from "../../utils";
 import { Alert } from "../../utils/Alert";
 import { useNavigate } from "react-router-dom";
+import axios from "../../utils/axios";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("");
@@ -19,9 +20,9 @@ export default function LoginPage() {
     const handleLogin = async () => {
         setLoading(true);
         try {
-            const response = await $api.post(`/admin/login`, { username, password });
+            const response = await axios.post(`/api/v1/admin/login`, { username, password });
             localStorage.setItem("token", response?.data?.object?.accessToken);
-            Alert("Muvaffaqiyatli qo'shildi", "success");
+            Alert("Muvaffaqiyatli", "success");
             setUsername("");
             setPassword("");
             navigate("/dashboard");
@@ -57,7 +58,6 @@ export default function LoginPage() {
                 <CardFooter className="pt-0 flex flex-col gap-4">
                     <Button
                         onClick={handleLogin}
-                        type="submit"
                         fullWidth
                         disabled={loading}
                         className="flex items-center justify-center gap-2"

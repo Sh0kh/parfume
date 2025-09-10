@@ -10,25 +10,23 @@ import {
     Typography,
     Checkbox,
 } from "@material-tailwind/react";
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import { $api } from "../../../utils";
-import { useParams } from "react-router-dom";
 
-export default function CreateProduct({ refresh }) {
-    const { id } = useParams()
+export default function EditProduct({ data, refresh }) {
     const [open, setOpen] = useState(false);
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreview, setImagePreview] = useState(data?.fileList?.[0]?.filePath || null);
     const [file, setFile] = useState(null);
 
     // form states
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState("");
-    const [isActive, setIsActive] = useState(true);
+    const [name, setName] = useState(data?.name || "");
+    const [description, setDescription] = useState(data?.description || "");
+    const [price, setPrice] = useState(data?.price || "");
+    const [isActive, setIsActive] = useState(data?.isActive ?? true);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleOpen = () => {
-        if (!isLoading) setOpen(!open); // loading paytida yopilmasin
+        if (!isLoading) setOpen(!open);
     };
 
     const handleImageChange = (e) => {
@@ -42,9 +40,9 @@ export default function CreateProduct({ refresh }) {
     const handleSubmit = async () => {
         setIsLoading(true);
         try {
-            let fileId = null;
+            let fileId = data?.fileList?.[0]?.id || null;
 
-            // 1️⃣ Faylni alohida yuboramiz
+            // 1️⃣ Faylni alohida yuborish
             if (file) {
                 const formData = new FormData();
                 formData.append("files", file);
@@ -54,31 +52,26 @@ export default function CreateProduct({ refresh }) {
                 });
 
                 fileId = fileRes?.data?.object[0]?.id;
-
             }
 
-            // 2️⃣ Oddiy product ma’lumotlarini yuboramiz
             const productData = {
+                id: data?.id,
                 name,
                 description,
                 price: Number(price),
                 isActive,
-                categoryId: Number(id),
+                categoryId: data?.categoryId,
                 files: fileId ? [fileId] : [],
+                categoryName: data?.categoryName,
+                fileList: data?.fileList
             };
 
-            await $api.post("api/v1/product/create", productData);
+            await $api.put(`api/v1/product/update`, productData);
 
             handleOpen();
             refresh();
-            setName("");
-            setDescription("");
-            setPrice("");
-            setFile(null);
-            setImagePreview(null);
-            setIsActive(true);
         } catch (err) {
-            console.error("Tovar qo'shishda xato:", err);
+            console.error("Tovar yangilashda xato:", err);
         } finally {
             setIsLoading(false);
         }
@@ -86,16 +79,15 @@ export default function CreateProduct({ refresh }) {
 
     return (
         <div>
-            {/* Kategoriya bo‘yicha yangi tovar qo‘shish tugmasi */}
-            <Button color="blue" className="flex items-center gap-2" onClick={handleOpen}>
-                <PlusIcon className="h-5 w-5" />
-                Yangi Tovar
+            {/* Edit tugmasi */}
+            <Button color="blue" size="sm" onClick={handleOpen} className="flex items-center gap-1">
+                <PencilIcon className="h-4 w-4" />
             </Button>
 
             {/* Modal */}
             <Dialog open={open} handler={handleOpen} size="md">
                 <DialogHeader>
-                    <Typography variant="h5">Yangi Tovar Qo'shish</Typography>
+                    <Typography variant="h5">Tovarni Tahrirlash</Typography>
                 </DialogHeader>
 
                 <DialogBody divider className="space-y-4">
@@ -160,11 +152,11 @@ export default function CreateProduct({ refresh }) {
                     >
                         {isLoading ? (
                             <div className="flex items-center gap-2">
-                                Saqlanmoqda...
+                                Yangilanmoqda...
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                             </div>
                         ) : (
-                            "Saqlash"
+                            "Yangilash"
                         )}
                     </Button>
                 </DialogFooter>
