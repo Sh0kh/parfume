@@ -27,8 +27,8 @@ export default function AdminHeader(props) {
     }, []);
 
     return (
-        <div className="fixed w-[78%] z-30 top-[10px] flex justify-between items-center mb-6 px-6 py-4 
-            bg-white/30 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg">
+        <div className="fixed w-[100%] md:w-[78%] z-30 top-[10px] flex justify-between items-center mb-6 px-6 py-4 
+    bg-white/30 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg">
             <Button
                 onClick={() => navigate(-1)}
                 className="px-[20px] py-[5px] text-[20px]"
