@@ -3,7 +3,7 @@ import { LogOut, User, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
 
-export default function AdminHeader(props) {
+export default function AdminHeader({ active, ...props }) {
     const navigate = useNavigate();
     const [openMenu, setOpenMenu] = useState(false);
     const menuRef = useRef(null);
@@ -27,15 +27,29 @@ export default function AdminHeader(props) {
     }, []);
 
     return (
-        <div className="fixed w-[100%] md:w-[78%] z-30 top-[10px] flex justify-between items-center mb-6 px-6 py-4 
-    bg-white/30 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg">
-            <Button
-                onClick={() => navigate(-1)}
-                className="px-[20px] py-[5px] text-[20px]"
-                color="blue"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="0.5em" height="1em" viewBox="0 0 12 24"><path fill="currentColor" fillRule="evenodd" d="m3.343 12l7.071 7.071L9 20.485l-7.778-7.778a1 1 0 0 1 0-1.414L9 3.515l1.414 1.414z"></path></svg>
-            </Button>
+        <div className=" fixed top-[10px] z-30 
+                w-full md:w-[78%] 
+                mx-auto 
+                flex justify-between items-center 
+                mb-6 px-6 py-4 
+            bg-white/30 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg">
+            <div className="flex items-center gap-[20px]">
+                <Button
+                    onClick={() => navigate(-1)}
+                    className="px-[20px] py-[5px] text-[20px]"
+                    color="blue"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="0.5em" height="1em" viewBox="0 0 12 24"><path fill="currentColor" fillRule="evenodd" d="m3.343 12l7.071 7.071L9 20.485l-7.778-7.778a1 1 0 0 1 0-1.414L9 3.515l1.414 1.414z"></path></svg>
+                </Button>
+                <Button
+                    onClick={active}
+                    className="px-[20px] py-[5px] text-[20px]"
+                    color="blue"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"></path></svg>
+                </Button>
+            </div>
+
             {/* Profile Avatar & Menu */}
             <div className="relative flex items-center gap-4" ref={menuRef}>
                 <button

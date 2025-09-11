@@ -9,8 +9,9 @@ export default function Profile() {
         username: "",
         password: ""
     });
-
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(true);   // загрузка профиля
+    const [saving, setSaving] = useState(false);    // сохранение профиля
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,6 +19,7 @@ export default function Profile() {
     };
 
     const getProfile = async () => {
+        setLoading(true);
         try {
             const response = await $api.get("/api/v1/admin/getMe");
             setProfile({
@@ -27,6 +29,9 @@ export default function Profile() {
             });
         } catch (error) {
             console.error("Error fetching profile:", error);
+            Alert("Profilni olishda xatolik", "error");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -35,16 +40,18 @@ export default function Profile() {
     }, []);
 
     const EditProfile = async () => {
+        setSaving(true);
         try {
-            const response = await $api.put(`/api/v1/admin/update`, profile);
-            Alert("Buyurtma muvaffaqiyatli o‘chirildi", "success");
+            await $api.put(`/api/v1/admin/update`, profile);
+            Alert("Profil muvaffaqiyatli saqlandi ✅", "success");
         } catch (error) {
             console.log("Update error:", error);
             Alert(
-                `Xatolik: ${error.response?.data?.message || error.message || "Server xatosi"
-                }`,
+                `Xatolik: ${error.response?.data?.message || error.message || "Server xatosi"}`,
                 "error"
             );
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -52,6 +59,14 @@ export default function Profile() {
         e.preventDefault();
         EditProfile();
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-black"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex justify-center items-center p-6">
@@ -105,9 +120,10 @@ export default function Profile() {
                     {/* Save button */}
                     <button
                         type="submit"
-                        className="w-full bg-black text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition"
+                        disabled={saving}
+                        className="w-full bg-black text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50"
                     >
-                        Saqlash
+                        {saving ? "Saqlanmoqda..." : "Saqlash"}
                     </button>
                 </form>
             </div>

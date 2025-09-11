@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "https://3b8db20397d0998910a06ad31be1d027.serveo.net/";
+export const BASE_URL = "https://3a497c6f3c49199fa1db7d301a8f2fb6.serveo.net";
 
 export const $api = axios.create({
     baseURL: `${BASE_URL}`,

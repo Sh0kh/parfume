@@ -6,10 +6,11 @@ import {
     CardBody,
     Typography,
     Avatar,
-    Spinner,
 } from "@material-tailwind/react";
 import Loading from "../../UI/Loadings/Loading";
 import DeleteOrder from "./DeleteOrder";
+import CONFIG from "../../../utils/Config";
+import Photo from '../../../img/Photo.jpg';
 
 export default function DetailOrder() {
     const { id } = useParams();
@@ -35,9 +36,7 @@ export default function DetailOrder() {
         new Intl.NumberFormat("uz-UZ").format(price) + " UZS";
 
     if (loading) {
-        return (
-            <Loading />
-        );
+        return <Loading />;
     }
 
     if (!order) {
@@ -52,48 +51,47 @@ export default function DetailOrder() {
 
     return (
         <div className="px-6 py-6 mx-auto">
+            {/* Заголовок */}
             <div className="flex items-center justify-between mb-6">
-                <Typography variant="h4" className="font-bold ">
+                <Typography variant="h4" className="font-bold">
                     Buyurtma ma’lumotlari
                 </Typography>
-
                 <DeleteOrder />
             </div>
 
-            <Card className="shadow-lg">
-                <CardBody className="space-y-6">
+            {/* Карточка */}
+            <Card className="shadow-md border border-gray-200 rounded-xl">
+                <CardBody className="space-y-8">
                     {/* User Info */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center gap-4">
                         <Avatar
                             src="https://www.shutterstock.com/image-vector/people-icon-vector-person-sing-260nw-707883430.jpg"
                             alt={order.fullName}
                             size="lg"
+                            variant="rounded"
                         />
                         <div>
                             <Typography variant="h6" className="font-semibold">
                                 {order.fullName}
                             </Typography>
                             <Typography variant="small" color="gray">
-                                z {order.phoneNumber}
+                                {order.phoneNumber}
                             </Typography>
                             <Typography variant="small" color="gray">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg> {order.orderDate}
+                                {order.orderDate}
                             </Typography>
                         </div>
                     </div>
 
                     {/* Product Info */}
-                    <div className="flex items-start gap-4">
+                    <div className="flex flex-col md:flex-row md:items-start gap-6">
                         <img
-                            src={
-                                order.product.files?.[0]?.fileName
-                                    ? `http://localhost:8080/images/${order.product.files[0].fileName}`
-                                    : "https://via.placeholder.com/150"
-                            }
-                            alt={order.product.name}
-                            className="w-28 h-28 object-cover rounded-lg border"
+                            src={order?.product?.files?.[0]?.id ? CONFIG.API_URL + order?.product?.files?.[0]?.id : Photo}
+                            alt={order?.product?.name}
+                            onError={(e) => (e.currentTarget.src = Photo)}
+                            className="w-32 h-32 object-cover rounded-lg border"
                         />
-                        <div>
+                        <div className="space-y-2">
                             <Typography variant="h6" className="font-bold">
                                 {order.product.name}
                             </Typography>
@@ -106,20 +104,24 @@ export default function DetailOrder() {
                                     {order.product.category?.name}
                                 </span>
                             </Typography>
-                            <Typography variant="small" className="font-semibold text-blue-600">
+                            <Typography
+                                variant="small"
+                                className="font-semibold text-blue-600"
+                            >
                                 Narx: {formatPrice(order.product.price)}
                             </Typography>
                         </div>
                     </div>
 
                     {/* Order Summary */}
-                    <div className="border-t pt-4">
+                    <div className="border-t pt-4 space-y-2">
                         <Typography variant="small" className="font-medium">
-                            Miqdor: <span className="font-bold">{order.count} dona</span>
+                            Miqdor:{" "}
+                            <span className="font-bold">{order.count} dona</span>
                         </Typography>
                         <Typography
                             variant="h6"
-                            className="font-bold text-blue-700 mt-2"
+                            className="font-bold text-blue-700"
                         >
                             Jami: {formatPrice(order.product.price * order.count)}
                         </Typography>

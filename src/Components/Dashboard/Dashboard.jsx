@@ -64,10 +64,14 @@ export default function Dashboard() {
     if (loading) return <Loading />;
 
     return (
-        <div className="px-6 space-y-6">
-            {/* Yuqoridagi cardlar */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="shadow-lg hover:shadow-xl transition-shadow">
+        <div className="px-4 md:px-6 space-y-6">
+            {/* Cards */}
+            <div className="grid gap-4 sm:gap-6 
+                  grid-cols-1 
+                  sm:grid-cols-2 
+                  lg:grid-cols-3">
+                {/* Card 1 */}
+                <Card className="shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1">
                     <CardBody className="flex items-center gap-4">
                         <div className="p-3 bg-blue-100 rounded-xl">
                             <FolderIcon className="h-8 w-8 text-blue-600" />
@@ -81,7 +85,8 @@ export default function Dashboard() {
                     </CardBody>
                 </Card>
 
-                <Card className="shadow-lg hover:shadow-xl transition-shadow">
+                {/* Card 2 */}
+                <Card className="shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1">
                     <CardBody className="flex items-center gap-4">
                         <div className="p-3 bg-green-100 rounded-xl">
                             <CubeIcon className="h-8 w-8 text-green-600" />
@@ -95,7 +100,8 @@ export default function Dashboard() {
                     </CardBody>
                 </Card>
 
-                <Card className="shadow-lg hover:shadow-xl transition-shadow">
+                {/* Card 3 */}
+                <Card className="shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1">
                     <CardBody className="flex items-center gap-4">
                         <div className="p-3 bg-red-100 rounded-xl">
                             <ShoppingCartIcon className="h-8 w-8 text-red-600" />
@@ -110,26 +116,33 @@ export default function Dashboard() {
                 </Card>
             </div>
 
-            {/* 30 kunlik zakazlar grafikasi */}
-            <Card>
+            {/* Chart */}
+            <Card className="shadow-md">
                 <CardHeader
                     floated={false}
                     shadow={false}
                     color="transparent"
-                    className="flex flex-col gap-4 rounded-none md:flex-row md:items-center"
+                    className="flex flex-col gap-4 rounded-none sm:flex-row sm:items-center"
                 >
                     <div className="p-3 bg-red-100 rounded-xl">
                         <ShoppingCartIcon className="h-8 w-8 text-red-600" />
                     </div>
-                    <div>
-                        <Typography variant="h6" color="blue-gray">Shu oydagi zakazlar</Typography>
-                    </div>
+                    <Typography variant="h6" color="blue-gray">
+                        Shu oydagi zakazlar
+                    </Typography>
                 </CardHeader>
 
-                <CardBody className="px-2 pb-2">
-                    <Chart options={options} series={series} type="line" height={CHART_HEIGHT} width="100%" />
+                <CardBody className="px-2 pb-4 sm:px-6">
+                    <Chart
+                        options={options}
+                        series={series}
+                        type="line"
+                        height={CHART_HEIGHT}
+                        width="100%"
+                    />
                 </CardBody>
             </Card>
         </div>
+
     );
 }

@@ -3,6 +3,8 @@ import { Phone, PackageOpen } from 'lucide-react';
 import Logo from '../../img/Logo.png';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import CONFIG from '../../utils/Config';
+import Photo from '../../img/Photo.jpg'
 
 export default function Home() {
     const [data, setData] = useState([]);
@@ -38,9 +40,12 @@ export default function Home() {
                         </div>
                         {/* Actions */}
                         <div className="flex items-center space-x-4">
-                            <button className="p-2 hover:bg-gray-700 rounded-full transition-colors relative">
+                            <a
+                                href="tel:+998901234567" // сюда свой номер
+                                className="p-2 hover:bg-gray-700 rounded-full transition-colors relative inline-flex items-center justify-center"
+                            >
                                 <Phone className="w-5 h-5" style={{ color: '#fef3e0' }} />
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -89,9 +94,12 @@ export default function Home() {
                                         {/* Product Image */}
                                         <div className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-gray-700 to-gray-800">
                                             <img
-                                                src={product.image}
-                                                alt={product.name}
+                                                src={product?.file?.id ? CONFIG.API_URL + product.file.id : Photo}
+                                                alt={product?.name}
                                                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                                                onError={(e) => {
+                                                    e.currentTarget.src = Photo; // если ошибка загрузки
+                                                }}
                                             />
                                         </div>
 

@@ -104,13 +104,6 @@ export default function EditProduct({ data, refresh }) {
                     <div>
                         <Typography className="mb-2 font-medium">Foto yuklash</Typography>
                         <input type="file" accept="image/*" onChange={handleImageChange} disabled={isLoading} />
-                        {imagePreview && (
-                            <img
-                                src={imagePreview}
-                                alt="Preview"
-                                className="mt-3 w-full h-40 object-cover rounded-lg border"
-                            />
-                        )}
                     </div>
 
                     {/* Narxi */}

@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../../img/Logo.png";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { Alert } from "../../utils/Alert";
+import CONFIG from "../../utils/Config";
+import Photo from '../../img/Photo.jpg'
+
 
 export default function ProductBuy() {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [btnLoading, setBtnLoading] = useState(false);
+    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         name: "",
-        phone: "",
+        phone: "+998",
         quantity: 1,
         info: "",
     });
@@ -49,7 +53,7 @@ export default function ProductBuy() {
             phoneNumber: formData.phone,
             fullName: formData.name,
             productId: Number(id),
-            
+
         };
 
         try {
@@ -70,9 +74,18 @@ export default function ProductBuy() {
             <header className="sticky top-0 z-50" style={{ backgroundColor: "#202a34" }}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
-                        <div className="flex-shrink-0">
-                            <img className="w-[140px]" src={Logo} alt="logo" />
-                        </div>
+                        <NavLink to={'/'}>
+                            <div className="flex-shrink-0">
+                                <img className="w-[140px]" src={Logo} alt="logo" />
+                            </div>
+                        </NavLink>
+                        <button
+                            onClick={() => navigate(-1)}
+                            className={` bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-2xl font-semibold hover:shadow-lg transform transition-all duration-300 ${btnLoading ? "opacity-70 cursor-not-allowed" : "hover:scale-105"
+                                }`}
+                        >
+                            Ortga
+                        </button>
                     </div>
                 </div>
             </header>
@@ -100,8 +113,11 @@ export default function ProductBuy() {
                             >
                                 <div className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-gray-700 to-gray-800">
                                     <img
-                                        src={data?.image}
+                                        src={data?.files[0]?.id ? CONFIG.API_URL + data.files[0].id : Photo}
                                         alt={data?.name}
+                                        onError={(e) => {
+                                            e.currentTarget.src = Photo; // если ошибка загрузки
+                                        }}
                                         className="w-full h-80 object-contain group-hover:scale-110 transition-transform duration-700"
                                     />
                                 </div>
@@ -113,7 +129,7 @@ export default function ProductBuy() {
                                         {data?.name}
                                     </h3>
                                     <p className="text-lg font-semibold" style={{ color: "#fef3e0" }}>
-                                        {data?.price} so‘m
+                                        {data?.price ? `${Number(data.price).toLocaleString("ru-RU")} so‘m` : "Цена не указана"}
                                     </p>
                                 </div>
                             </div>

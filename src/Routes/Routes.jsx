@@ -53,7 +53,7 @@ export const AdminRoutes = [
     },
     {
         name: 'Product Detail',
-        path: '/product/:id',
+        path: '/admin/product/:id',
         component: <DetailProduct />
     },
     {

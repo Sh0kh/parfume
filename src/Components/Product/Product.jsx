@@ -5,7 +5,7 @@ import {
     Typography,
     Button,
 } from "@material-tailwind/react";
-import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, CubeIcon } from "@heroicons/react/24/solid";
+import { EyeIcon, CubeIcon } from "@heroicons/react/24/solid";
 import { NavLink, useParams } from "react-router-dom";
 import CreateProduct from "./components/CreateProduct";
 import { $api } from "../../utils";
@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import Loading from "../UI/Loadings/Loading";
 import DeleteProduct from "./components/DeleteProduct";
 import EditProduct from "./components/EditProduct";
+import CONFIG from "../../utils/Config";
+import Photo from "../../img/Photo.jpg";
 
 export default function Product() {
     const { id } = useParams();
@@ -47,13 +49,15 @@ export default function Product() {
     }
 
     return (
-        <div className="px-6">
+        <div className="px-6 pb-[50px]">
             {/* Title + button */}
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold mr-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-center sm:text-left gap-4 pb-4 border-b mb-6">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
                     {data[0]?.categoryName || "Tovarlar"}
                 </h1>
-                <CreateProduct refresh={getProduct} categoryId={id} />
+                <div className="flex justify-center sm:justify-end">
+                    <CreateProduct refresh={getProduct} categoryId={id} />
+                </div>
             </div>
 
             {/* Empty state */}
@@ -77,22 +81,32 @@ export default function Product() {
                         >
                             <CardHeader floated={false} className="h-56">
                                 <img
-                                    src={product.fileList[0]?.filePath}
-                                    alt={product.name}
+                                    src={
+                                        product?.fileList[0]?.id
+                                            ? CONFIG.API_URL + product.fileList[0].id
+                                            : Photo
+                                    }
+                                    alt={product?.name}
                                     className="w-full h-full object-contain"
                                 />
                             </CardHeader>
                             <CardBody className="text-center">
-                                <Typography variant="h6" className="font-semibold">
+                                <Typography variant="h6" className="font-semibold truncate">
                                     {product.name}
                                 </Typography>
-                                <Typography color="gray" className="mt-2 text-lg font-medium">
+                                <Typography
+                                    color="gray"
+                                    className="mt-2 text-lg font-medium"
+                                >
                                     {formatPrice(product.price)}
                                 </Typography>
                                 <div className="flex justify-center gap-2 mt-2">
                                     <EditProduct data={product} refresh={getProduct} />
-                                    <DeleteProduct productId={product?.id} refresh={getProduct} />
-                                    <NavLink to={`/product/${product.id}`}>
+                                    <DeleteProduct
+                                        productId={product?.id}
+                                        refresh={getProduct}
+                                    />
+                                    <NavLink to={`/admin/product/${product.id}`}>
                                         <Button
                                             color="green"
                                             size="sm"

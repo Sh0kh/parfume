@@ -1,8 +1,10 @@
 import { PackageOpen, Phone, ShoppingCart } from "lucide-react";
 import Logo from "../../img/Logo.png";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Photo from '../../img/Photo.jpg'
+import CONFIG from "../../utils/Config";
 
 export default function HomeProduct() {
     const { id } = useParams();
@@ -10,6 +12,7 @@ export default function HomeProduct() {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const navigate = useNavigate()
 
     const getProduct = async (pageNumber = 0) => {
         setLoading(true);
@@ -42,14 +45,19 @@ export default function HomeProduct() {
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <div className="flex-shrink-0">
-                            <div className="flex items-center space-x-2">
-                                <img className="w-[140px]" src={Logo} alt="Logo" />
-                            </div>
+                            <NavLink to={'/'}>
+                                <div className="flex-shrink-0">
+                                    <img className="w-[140px]" src={Logo} alt="logo" />
+                                </div>
+                            </NavLink>
                         </div>
                         {/* Actions */}
                         <div className="flex items-center space-x-4">
-                            <button className="p-2 hover:bg-gray-700 rounded-full transition-colors relative">
-                                <Phone className="w-5 h-5" style={{ color: "#fef3e0" }} />
+                            <button
+                                onClick={() => navigate(-1)}
+                                className={` bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-2xl font-semibold hover:shadow-lg transform transition-all duration-300 `}
+                            >
+                                Ortga
                             </button>
                         </div>
                     </div>
@@ -102,10 +110,14 @@ export default function HomeProduct() {
                                         {/* Product Image */}
                                         <div className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-gray-700 to-gray-800">
                                             <img
-                                                src={product.image}
-                                                alt={product.name}
+                                                src={product?.fileList[0]?.id ? CONFIG.API_URL + product.fileList[0].id : Photo}
+                                                alt={product?.name}
+                                                onError={(e) => {
+                                                    e.currentTarget.src = Photo; // если ошибка загрузки
+                                                }}
                                                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                                             />
+
                                         </div>
 
                                         {/* Product Info */}
@@ -120,7 +132,7 @@ export default function HomeProduct() {
                                                 className="text-xl font-bold group-hover:text-purple-400 transition-colors"
                                                 style={{ color: "#fef3e0" }}
                                             >
-                                                {product.price} so‘m
+                                                {product?.price ? `${Number(product.price).toLocaleString("ru-RU")} so‘m` : "Цена не указана"}
                                             </h3>
                                             {/* Add to Cart Button */}
                                             <NavLink to={`/buyProduct/${product.id}`}>
