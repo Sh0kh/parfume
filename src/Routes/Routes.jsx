@@ -4,7 +4,7 @@ import Home from "../Components/Home/Home";
 import HomeProduct from "../Components/Home/HomeProduct";
 import ProductBuy from "../Components/Home/ProductBuy";
 import AuthForm from "../Components/Login/Login";
-import DetailOrder from "../Components/Orders/components/Detailorder";
+import DetailOrder from "../Components/Orders/components/DetailOrder";
 import Orders from "../Components/Orders/Orders";
 import DetailProduct from "../Components/Product/components/DetailProduct";
 import Product from "../Components/Product/Product";
