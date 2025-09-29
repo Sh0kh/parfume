@@ -42,7 +42,6 @@ export default function LoginPage() {
                     <Input
                         label="Login"
                         size="lg"
-                        type="tel"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
