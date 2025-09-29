@@ -4,11 +4,12 @@ import Logo from '../../img/Logo.png';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import CONFIG from '../../utils/Config';
-import Photo from '../../img/Photo.jpg'
+import Photo from '../../img/Photo.jpg';
 
 export default function Home() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isTelegram, setIsTelegram] = useState(false);
 
     const getAllCategory = async () => {
         setLoading(true);
@@ -24,12 +25,23 @@ export default function Home() {
 
     useEffect(() => {
         getAllCategory();
+
+        // Проверяем, открыто ли в Telegram WebApp
+        if (window?.Telegram?.WebApp) {
+            setIsTelegram(true);
+        }
     }, []);
 
     return (
-        <>
+        <div className="bg-[#202a34]">
             {/* Header */}
-            <header className="sticky top-0 z-50" style={{ backgroundColor: '#202a34' }}>
+            <header
+                className="sticky z-50"
+                style={{
+                    top: isTelegram ? '100px' : '0px',
+                    backgroundColor: '#202a34',
+                }}
+            >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
@@ -41,7 +53,7 @@ export default function Home() {
                         {/* Actions */}
                         <div className="flex items-center space-x-4">
                             <a
-                                href="tel:+998901234567" // сюда свой номер
+                                href="tel:+998901234567"
                                 className="p-2 hover:bg-gray-700 rounded-full transition-colors relative inline-flex items-center justify-center"
                             >
                                 <Phone className="w-5 h-5" style={{ color: '#fef3e0' }} />
@@ -50,8 +62,15 @@ export default function Home() {
                     </div>
                 </div>
             </header>
+
             {/* Products Section */}
-            <section className="py-10 min-h-screen" style={{ backgroundColor: '#202a34' }}>
+            <section
+                className="pb-10 min-h-screen"
+                style={{
+                    backgroundColor: '#202a34',
+                    paddingTop: isTelegram ? '150px' : '10px',
+                }}
+            >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
                         // 🔄 Loading skeletons
@@ -98,7 +117,7 @@ export default function Home() {
                                                 alt={product?.name}
                                                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                                                 onError={(e) => {
-                                                    e.currentTarget.src = Photo; // если ошибка загрузки
+                                                    e.currentTarget.src = Photo;
                                                 }}
                                             />
                                         </div>
@@ -119,6 +138,6 @@ export default function Home() {
                     )}
                 </div>
             </section>
-        </>
+        </div>
     );
 }

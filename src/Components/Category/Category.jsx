@@ -44,7 +44,7 @@ export default function Category() {
   }
 
   return (
-    <div className="px-6 space-y-6">
+    <div className="px-6 space-y-6 ">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-center sm:text-left gap-4 pb-4 border-b">
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
