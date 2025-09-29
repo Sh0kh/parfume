@@ -10,7 +10,6 @@ export default function AdminLayout() {
     const [active, setActive] = useState(false)
 
 
-    console.log(active)
 
 
     return (

@@ -22,6 +22,7 @@ export default function LoginPage() {
         try {
             const response = await axios.post(`/api/v1/admin/login`, { username, password });
             localStorage.setItem("token", response?.data?.object?.accessToken);
+            localStorage.setItem("refreshToken", response?.data?.object?.refreshToken);
             Alert("Muvaffaqiyatli", "success");
             setUsername("");
             setPassword("");

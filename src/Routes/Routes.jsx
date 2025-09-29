@@ -72,4 +72,5 @@ export const AdminRoutes = [
         component: <Profile />
     },
 
+
 ]
